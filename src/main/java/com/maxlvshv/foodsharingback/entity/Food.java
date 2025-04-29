@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "foods")
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Food {
@@ -46,5 +44,77 @@ public class Food {
 
     public boolean isExpired() {
         return LocalDateTime.now().isAfter(expirationDate);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public FoodCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(FoodCategory category) {
+        this.category = category;
+    }
+
+    public double getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(double originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public double getDiscountPrice() {
+        return discountPrice;
+    }
+
+    public void setDiscountPrice(double discountPrice) {
+        this.discountPrice = discountPrice;
+    }
+
+    public LocalDateTime getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(LocalDateTime expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 }
