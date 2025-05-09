@@ -25,11 +25,13 @@ public class Shop {
 
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    private ShopType type;
+
     @Column(nullable = false)
     private String address;
 
     private String contactPhone;
-    private String workingHours;
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Food> foods = new ArrayList<>();
