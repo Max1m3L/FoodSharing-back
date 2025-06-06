@@ -51,6 +51,27 @@ public class AuthenticationService {
     }
 
     /**
+     * Регистрация пользователя
+     *
+     * @param request данные пользователя
+     * @return токен
+     */
+    public JwtAuthenticationResponse signUpAdmin(SignUpRequest request) {
+
+        var user = User.builder()
+                .setUsername(request.getUsername())
+                .setEmail(request.getEmail())
+                .setPassword(passwordEncoder.encode(request.getPassword()))
+                .setRole(Role.ROLE_ADMIN)
+                .build();
+
+        userService.create(user);
+
+        var jwt = jwtService.generateToken(user);
+        return new JwtAuthenticationResponse(jwt);
+    }
+
+    /**
      * Аутентификация пользователя
      *
      * @param request данные пользователя

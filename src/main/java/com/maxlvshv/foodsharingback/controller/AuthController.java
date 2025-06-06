@@ -27,6 +27,12 @@ public class AuthController {
         return ResponseEntity.ok(authenticationService.signUp(request));
     }
 
+    @Operation(summary = "Регистрация админа")
+    @PostMapping("/sign-up-admin")
+    public ResponseEntity<JwtAuthenticationResponse> signUpAdmin(@RequestBody @Valid SignUpRequest request) {
+        return ResponseEntity.ok(authenticationService.signUpAdmin(request));
+    }
+
     @Operation(summary = "Авторизация пользователя")
     @PostMapping("/sign-in")
     public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
