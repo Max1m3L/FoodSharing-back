@@ -11,6 +11,7 @@ import com.maxlvshv.foodsharingback.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -29,11 +30,12 @@ public class ShopController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ShopResponse> createShop(
             @RequestBody CreateShopRequest request,
             Principal principal // Автоматически содержит email текущего пользователя
     ) {
-        User owner = userRepository.findByEmail(principal.getName())
+        User owner = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Shop shop = shopService.createShop(request, owner);

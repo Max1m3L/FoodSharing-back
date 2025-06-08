@@ -49,6 +49,7 @@ public class ShopService {
         Food food = new Food();
         food.setName(request.name());
         food.setDescription(request.description());
+        food.setCategory(request.category());
         food.setOriginalPrice(request.originalPrice());
         food.setDiscountPrice(calculateDiscountPrice(request.originalPrice()));
         food.setExpirationDate(LocalDateTime.now().plusHours(request.expiresInHours()));
