@@ -30,6 +30,18 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false, name = "first_name")
+    private String firstName;
+
+    @Column(nullable = false, name = "last_name")
+    private String lastName;
+
+    @Column(nullable = false)
+    private String city;
+
+    @Column(nullable = false)
+    private String number;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -73,6 +85,7 @@ public class User implements UserDetails {
         return true;
     }
 
+
     // Геттреры / Сеттеры
     public Long getId() {
         return id;
@@ -89,7 +102,6 @@ public class User implements UserDetails {
     public void setUsername(String username) {
         this.username = username;
     }
-
 
     public String getPassword() {
         return password;
@@ -139,6 +151,38 @@ public class User implements UserDetails {
         this.favoriteFoods = favoriteFoods;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
     public User() {
     }
 
@@ -147,12 +191,20 @@ public class User implements UserDetails {
         this.email = builder.email;
         this.password = builder.password;
         this.role = builder.role;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.city = builder.city;
+        this.number = builder.number;
     }
 
     public static class Builder {
         private String username;
         private String email;
         private String password;
+        private String firstName;
+        private String lastName;
+        private String city;
+        private String number;
         private Role role;
 
         public Builder setUsername(String username) {
@@ -172,6 +224,26 @@ public class User implements UserDetails {
 
         public Builder setRole(Role role) {
             this.role = role;
+            return this;
+        }
+
+        public Builder setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder setLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder setCity(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public Builder setNumber(String number) {
+            this.number = number;
             return this;
         }
 
