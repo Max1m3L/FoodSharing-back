@@ -32,6 +32,7 @@ public class ShopService {
         shop.setName(request.name());
         shop.setDescription(request.description());
         shop.setAddress(request.address());
+        shop.setContactPhone(request.contactPhone());
         shop.setOwner(owner); // Устанавливаем владельца
 
         return shopRepo.save(shop);

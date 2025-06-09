@@ -5,5 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 public record CreateShopRequest(
         @NotBlank String name,
         String description,
-        @NotBlank String address)
+        @NotBlank String address,
+        String contactPhone
+)
 {}

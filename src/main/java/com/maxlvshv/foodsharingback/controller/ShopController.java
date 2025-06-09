@@ -1,17 +1,19 @@
 package com.maxlvshv.foodsharingback.controller;
 
+import com.maxlvshv.foodsharingback.dto.MainPageResponse;
 import com.maxlvshv.foodsharingback.dto.shop.CreateFoodRequest;
 import com.maxlvshv.foodsharingback.dto.shop.CreateShopRequest;
 import com.maxlvshv.foodsharingback.dto.shop.ShopResponse;
 import com.maxlvshv.foodsharingback.entity.Food;
+import com.maxlvshv.foodsharingback.entity.Role;
 import com.maxlvshv.foodsharingback.entity.Shop;
 import com.maxlvshv.foodsharingback.entity.User;
 import com.maxlvshv.foodsharingback.repository.UserRepository;
+import com.maxlvshv.foodsharingback.service.FoodService;
 import com.maxlvshv.foodsharingback.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -22,29 +24,39 @@ import java.util.List;
 public class ShopController {
     private final ShopService shopService;
     private final UserRepository userRepository;
+    private final FoodService foodService;
 
     @Autowired
-    public ShopController(ShopService shopService, UserRepository userRepository) {
+    public ShopController(ShopService shopService, UserRepository userRepository, FoodService foodService) {
         this.shopService = shopService;
         this.userRepository = userRepository;
+        this.foodService = foodService;
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ShopResponse> createShop(
             @RequestBody CreateShopRequest request,
-            Principal principal // Автоматически содержит email текущего пользователя
+            Principal principal // Автоматически содержит username (login) текущего пользователя
     ) {
         User owner = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Shop shop = shopService.createShop(request, owner);
+        owner.setRole(Role.ROLE_ADMIN);
+        userRepository.save(owner);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ShopResponse(shop));
     }
 
     @GetMapping
-    public ResponseEntity<List<Shop>> getShops() {
-        return ResponseEntity.ok(shopService.getAllShop());
+    public ResponseEntity<MainPageResponse> getShops(Principal principal) {
+        User currentUser = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Shop> shops = shopService.getAllShop();
+        List<Food> products = foodService.getFoods();
+        MainPageResponse response = new MainPageResponse(currentUser, shops, products);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
