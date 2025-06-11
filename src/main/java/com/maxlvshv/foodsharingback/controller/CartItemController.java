@@ -41,7 +41,8 @@ public class CartItemController {
 
         List<CartItem> cartItems = cartItemService.findUserCart(currentUser);
         List<CartItemDTO> cartItemDTOs = cartItems.stream()
-                .map(item -> new CartItemDTO(item.getFood().getId(), item.getQuantity()))
+                .map(item -> new CartItemDTO(item.getFood().getId(), item.getQuantity(), item.getFood().getName(),
+                        item.getFood().getOriginalPrice(), item.getFood().getDiscountPrice()))
                 .collect(Collectors.toList());
         UserCartResponse response = new UserCartResponse(cartItemDTOs);
         return ResponseEntity.ok(response);
