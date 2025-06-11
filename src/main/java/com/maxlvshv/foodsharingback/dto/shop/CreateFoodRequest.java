@@ -10,6 +10,7 @@ public record CreateFoodRequest(
         String description,
         @NotNull FoodCategory category,
         @Positive double originalPrice,
-        @Positive int expiresInHours
+        @Positive double discountPrice,
+        @Positive int expiresDate
 ) {
 }

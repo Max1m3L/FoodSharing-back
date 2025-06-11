@@ -1,5 +1,6 @@
 package com.maxlvshv.foodsharingback.controller;
 
+import com.maxlvshv.foodsharingback.dto.AdminShopResponse;
 import com.maxlvshv.foodsharingback.dto.MainPageResponse;
 import com.maxlvshv.foodsharingback.dto.shop.CreateFoodRequest;
 import com.maxlvshv.foodsharingback.dto.shop.CreateShopRequest;
@@ -33,6 +34,7 @@ public class ShopController {
         this.foodService = foodService;
     }
 
+    // Создание магазина
     @PostMapping
     public ResponseEntity<ShopResponse> createShop(
             @RequestBody CreateShopRequest request,
@@ -47,6 +49,7 @@ public class ShopController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ShopResponse(shop));
     }
 
+    // Главная страница - выводит все магазины и еду
     @GetMapping
     public ResponseEntity<MainPageResponse> getShops(Principal principal) {
         User currentUser = userRepository.findByUsername(principal.getName())
@@ -63,6 +66,16 @@ public class ShopController {
     public ResponseEntity<Shop> getShop(@PathVariable Long id) {
         Shop shop = shopService.getShop(id);
         return shop != null ? ResponseEntity.ok(shop) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity<AdminShopResponse> getShopByAdmin(Principal principal) {
+        User currentUser = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Shop> shop = shopService.findShopByOwner(currentUser);
+        AdminShopResponse response = new AdminShopResponse(currentUser, shop);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

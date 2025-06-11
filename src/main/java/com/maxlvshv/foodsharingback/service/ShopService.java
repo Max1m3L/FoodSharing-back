@@ -52,15 +52,15 @@ public class ShopService {
         food.setDescription(request.description());
         food.setCategory(request.category());
         food.setOriginalPrice(request.originalPrice());
-        food.setDiscountPrice(calculateDiscountPrice(request.originalPrice()));
-        food.setExpirationDate(LocalDateTime.now().plusHours(request.expiresInHours()));
+        food.setDiscountPrice(request.originalPrice());
+        food.setExpirationDate(LocalDateTime.now().plusHours(request.expiresDate()));
         food.setShop(shop); // Привязываем к магазину
 
         return foodRepo.save(food);
     }
 
-    private double calculateDiscountPrice(double originalPrice) {
-        return originalPrice * 0.5;
+    public List<Shop> findShopByOwner(User owner) {
+        return shopRepo.findByOwner(owner);
     }
 
     public List<Shop> getAllShop() {
