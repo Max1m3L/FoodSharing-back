@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public record CreateCartItemRequest(
-        @NotNull Long food,
-        @Positive int quantity
+        @NotNull Long food
 ) {
 }

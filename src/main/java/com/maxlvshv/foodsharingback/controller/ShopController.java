@@ -38,7 +38,7 @@ public class ShopController {
     @PostMapping
     public ResponseEntity<ShopResponse> createShop(
             @RequestBody CreateShopRequest request,
-            Principal principal // Автоматически содержит username (login) текущего пользователя
+            Principal principal
     ) {
         User owner = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));

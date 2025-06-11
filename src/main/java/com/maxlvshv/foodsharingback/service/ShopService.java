@@ -52,7 +52,7 @@ public class ShopService {
         food.setDescription(request.description());
         food.setCategory(request.category());
         food.setOriginalPrice(request.originalPrice());
-        food.setDiscountPrice(request.originalPrice());
+        food.setDiscountPrice(request.discountPrice());
         food.setExpirationDate(LocalDateTime.now().plusHours(request.expiresDate()));
         food.setShop(shop); // Привязываем к магазину
 
