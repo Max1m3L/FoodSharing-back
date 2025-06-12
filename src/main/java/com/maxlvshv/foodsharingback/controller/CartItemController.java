@@ -41,7 +41,7 @@ public class CartItemController {
 
         List<CartItem> cartItems = cartItemService.findUserCart(currentUser);
         List<CartItemDTO> cartItemDTOs = cartItems.stream()
-                .map(item -> new CartItemDTO(item.getFood().getId(), item.getQuantity(), item.getFood().getName(),
+                .map(item -> new CartItemDTO(item.getId() ,item.getFood().getId(), item.getQuantity(), item.getFood().getName(),
                         item.getFood().getOriginalPrice(), item.getFood().getDiscountPrice()))
                 .collect(Collectors.toList());
         UserCartResponse response = new UserCartResponse(cartItemDTOs);
@@ -74,5 +74,14 @@ public class CartItemController {
         cartItemService.decreaseQuantity(cartItemId, currentUser);
 
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/cart/{cartItemId}")
+    public ResponseEntity<Void> removeItem(@PathVariable Long cartItemId, Principal principal) {
+        User currentUser = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        cartItemService.removeFromCart(cartItemId, currentUser);
+        return ResponseEntity.noContent().build();
     }
 }

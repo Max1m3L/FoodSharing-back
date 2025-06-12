@@ -61,4 +61,11 @@ public class CartItemService {
         }
         return null;
     }
+
+    public void removeFromCart(Long cartItemId, User user) {
+        CartItem cartItem = cartItemRepository.findByIdAndUser(cartItemId, user)
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+        cartItemRepository.delete(cartItem);
+    }
 }

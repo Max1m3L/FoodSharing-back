@@ -1,20 +1,28 @@
 package com.maxlvshv.foodsharingback.dto;
 
 public class CartItemDTO {
+    private Long id;
     private Long foodId;
     private int quantity;
     private String foodName;
     private double originalPrice;
     private double discountPrice;
 
-
-
-    public CartItemDTO(Long foodId, int quantity, String foodName, double originalPrice, double discountPrice) {
+    public CartItemDTO(Long id, Long foodId, int quantity, String foodName, double originalPrice, double discountPrice) {
+        this.id = id;
         this.foodId = foodId;
         this.quantity = quantity;
         this.foodName = foodName;
         this.originalPrice = originalPrice;
         this.discountPrice = discountPrice;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getFoodId() {
