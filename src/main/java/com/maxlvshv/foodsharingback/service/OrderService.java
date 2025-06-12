@@ -1,5 +1,6 @@
 package com.maxlvshv.foodsharingback.service;
 
+import com.maxlvshv.foodsharingback.dto.shop.CreateOrderRequest;
 import com.maxlvshv.foodsharingback.entity.CartItem;
 import com.maxlvshv.foodsharingback.entity.Order;
 import com.maxlvshv.foodsharingback.entity.OrderItem;
@@ -24,14 +25,16 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Order createOrder(User user) {
+    public Order createOrder(User user, CreateOrderRequest request) {
         // Получаем товары из корзины пользователя
         List<CartItem> cartItems = cartItemRepository.findByUser(user);
 
         // Создаем новый заказ
         Order order = new Order();
         order.setUser(user);
-        order.setStatus(OrderStatus.PENDING);
+        order.setStatus(OrderStatus.REGISTERED);
+        order.setFinalPrice(request.finalPrice());
+        order.setDiscountPrice(request.discountPrice());
 
         // Добавляем товары из корзины в заказ
         for (CartItem cartItem : cartItems) {
@@ -49,5 +52,9 @@ public class OrderService {
         cartItemRepository.deleteAll(cartItems);
 
         return savedOrder;
+    }
+
+    public List<Order> findUserOrder(User currentUser) {
+        return orderRepository.findByUser(currentUser);
     }
 }
