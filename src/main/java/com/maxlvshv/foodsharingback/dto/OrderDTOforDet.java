@@ -1,15 +1,11 @@
 package com.maxlvshv.foodsharingback.dto;
 
-import com.maxlvshv.foodsharingback.entity.Order;
-import com.maxlvshv.foodsharingback.entity.OrderItem;
 import com.maxlvshv.foodsharingback.entity.OrderStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
-
-public class OrderDTO {
+public class OrderDTOforDet {
     private Long id;
     private Long userId;
     private List<OrderItemDTO> items;
@@ -18,7 +14,11 @@ public class OrderDTO {
     private int finalPrice;
     private int discountPrice;
 
-    public OrderDTO(Long id, Long userId, List<OrderItemDTO> items, OrderStatus status, LocalDateTime createdAt, int finalPrice, int discountPrice) {
+    public OrderDTOforDet() {
+
+    }
+
+    public OrderDTOforDet(Long id, Long userId, List<OrderItemDTO> items, OrderStatus status, LocalDateTime createdAt, int finalPrice, int discountPrice) {
         this.id = id;
         this.userId = userId;
         this.items = items;
@@ -28,16 +28,12 @@ public class OrderDTO {
         this.discountPrice = discountPrice;
     }
 
-    public OrderDTO(Order order) {
-        this.id = order.getId();
-        this.userId = order.getUser().getId(); // Получаем ID пользователя
-        this.items = order.getItems().stream()
-                .map(OrderItemDTO::new)
-                .collect(Collectors.toList());
-        this.status = order.getStatus();
-        this.createdAt = order.getCreatedAt();
-        this.finalPrice = order.getFinalPrice();
-        this.discountPrice = order.getDiscountPrice();
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getUserId() {
@@ -54,14 +50,6 @@ public class OrderDTO {
 
     public void setItems(List<OrderItemDTO> items) {
         this.items = items;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public OrderStatus getStatus() {

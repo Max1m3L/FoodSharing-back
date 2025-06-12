@@ -6,27 +6,27 @@ import com.maxlvshv.foodsharingback.entity.User;
 import java.util.List;
 
 public class AdminShopResponse {
-    private User currentUser;
-    private List<Shop> shop;
+    private UserDTO currentUser;
+    private List<ShopDTO> shops;
 
-    public AdminShopResponse(User currentUser, List<Shop> shop) {
+    public AdminShopResponse(UserDTO currentUser, List<ShopDTO> shops) {
         this.currentUser = currentUser;
-        this.shop = shop;
+        this.shops = shops;
     }
 
-    public User getCurrentUser() {
+    public UserDTO getCurrentUser() {
         return currentUser;
     }
 
-    public void setCurrentUser(User currentUser) {
+    public void setCurrentUser(UserDTO currentUser) {
         this.currentUser = currentUser;
     }
 
-    public List<Shop> getShop() {
-        return shop;
+    public List<ShopDTO> getShops() {
+        return shops;
     }
 
-    public void setShop(List<Shop> shop) {
-        this.shop = shop;
+    public void setShops(List<ShopDTO> shops) {
+        this.shops = shops;
     }
 }

@@ -2,6 +2,8 @@ package com.maxlvshv.foodsharingback.controller;
 
 import com.maxlvshv.foodsharingback.dto.AdminShopResponse;
 import com.maxlvshv.foodsharingback.dto.MainPageResponse;
+import com.maxlvshv.foodsharingback.dto.UserDTO;
+import com.maxlvshv.foodsharingback.dto.ShopDTO;
 import com.maxlvshv.foodsharingback.dto.shop.CreateFoodRequest;
 import com.maxlvshv.foodsharingback.dto.shop.CreateShopRequest;
 import com.maxlvshv.foodsharingback.dto.shop.ShopResponse;
@@ -18,7 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/shops")
@@ -68,13 +72,28 @@ public class ShopController {
         return shop != null ? ResponseEntity.ok(shop) : ResponseEntity.notFound().build();
     }
 
+//    @GetMapping("/admin")
+//    public ResponseEntity<AdminShopResponse> getShopByAdmin(Principal principal) {
+//        User currentUser = userRepository.findByUsername(principal.getName())
+//                .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//        List<Shop> shop = shopService.findShopByOwner(currentUser);
+//        AdminShopResponse response = new AdminShopResponse(currentUser, shop);
+//        return ResponseEntity.ok(response);
+//    }
     @GetMapping("/admin")
     public ResponseEntity<AdminShopResponse> getShopByAdmin(Principal principal) {
         User currentUser = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<Shop> shop = shopService.findShopByOwner(currentUser);
-        AdminShopResponse response = new AdminShopResponse(currentUser, shop);
+        List<Shop> shops = shopService.findShopByOwner(currentUser); // Убедитесь, что это List<Shop>
+
+        // Создаем AdminShopResponse с использованием DTO
+        AdminShopResponse response = new AdminShopResponse(new UserDTO(currentUser),
+                shops.stream()
+                        .map(ShopDTO::new) // Преобразуем каждый объект Shop в ShopDTO
+                        .collect(Collectors.toList())); // Собираем в список
+
         return ResponseEntity.ok(response);
     }
 

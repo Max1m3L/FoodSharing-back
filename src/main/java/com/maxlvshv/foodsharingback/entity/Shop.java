@@ -20,6 +20,28 @@ public class Shop {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String name;
+
+    private String description;
+
+    @Enumerated(EnumType.STRING)
+    private ShopType type;
+
+    @Column(nullable = false)
+    private String address;
+
+    private String contactPhone;
+
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Food> foods = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    @JsonIgnore
+    private User owner;
+
     public Long getId() {
         return id;
     }
@@ -83,26 +105,4 @@ public class Shop {
     public void setOwner(User owner) {
         this.owner = owner;
     }
-
-    @Column
-    private String name;
-
-    private String description;
-
-    @Enumerated(EnumType.STRING)
-    private ShopType type;
-
-    @Column(nullable = false)
-    private String address;
-
-    private String contactPhone;
-
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Food> foods = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    @JsonIgnore
-    private User owner;
 }

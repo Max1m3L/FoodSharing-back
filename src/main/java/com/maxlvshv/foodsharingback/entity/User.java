@@ -1,6 +1,7 @@
 package com.maxlvshv.foodsharingback.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,6 +53,7 @@ public class User implements UserDetails {
     private List<CartItem> cartItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Order> orders = new ArrayList<>();
 
     @ManyToMany
@@ -61,6 +63,10 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "food_id")
     )
     private List<Food> favoriteFoods = new ArrayList<>();
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonIgnore // Игнорируем поле orders при сериализации
+    private List<Shop> shops = new ArrayList<>();
 
     // От UserDetails
     @Override

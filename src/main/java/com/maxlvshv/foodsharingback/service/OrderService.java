@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.maxlvshv.foodsharingback.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -26,29 +27,25 @@ public class OrderService {
     }
 
     public Order createOrder(User user, CreateOrderRequest request) {
-        // Получаем товары из корзины пользователя
         List<CartItem> cartItems = cartItemRepository.findByUser(user);
 
-        // Создаем новый заказ
         Order order = new Order();
         order.setUser(user);
         order.setStatus(OrderStatus.REGISTERED);
         order.setFinalPrice(request.finalPrice());
         order.setDiscountPrice(request.discountPrice());
 
-        // Добавляем товары из корзины в заказ
         for (CartItem cartItem : cartItems) {
             OrderItem orderItem = new OrderItem();
             orderItem.setFood(cartItem.getFood());
             orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setOrder(order); // Устанавливаем связь с заказом
-            order.getItems().add(orderItem); // Добавляем товар в заказ
+            orderItem.setOrder(order);
+            orderItem.setPriceAtPurchase(request.discountPrice());
+            order.getItems().add(orderItem);
         }
 
-        // Сохраняем заказ в базе данных
         Order savedOrder = orderRepository.save(order);
 
-        // Удаляем товары из корзины
         cartItemRepository.deleteAll(cartItems);
 
         return savedOrder;
@@ -56,5 +53,10 @@ public class OrderService {
 
     public List<Order> findUserOrder(User currentUser) {
         return orderRepository.findByUser(currentUser);
+    }
+
+    public Order findOrderById(Long orderId) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        return orderOptional.orElse(null); // Возвращаем заказ или null, если не найден
     }
 }
