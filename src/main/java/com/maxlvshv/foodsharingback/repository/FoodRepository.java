@@ -12,5 +12,6 @@ import java.util.List;
 public interface FoodRepository extends JpaRepository<Food, Long> {
     List<Food> findByShopIdAndIsActiveTrue(Long shopId);
     List<Food> findByExpirationDateBetween(LocalDateTime start, LocalDateTime end);
-    List<Food> findByShop(Shop shop);
+
+    List<Food> findAllByShop(Shop shop);
 }
