@@ -1,6 +1,8 @@
 package com.maxlvshv.foodsharingback.service;
 
 import com.maxlvshv.foodsharingback.entity.Food;
+import com.maxlvshv.foodsharingback.entity.Shop;
+import com.maxlvshv.foodsharingback.entity.User;
 import com.maxlvshv.foodsharingback.repository.FoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,5 +20,9 @@ public class FoodService {
 
     public List<Food> getFoods() {
         return foodRepository.findAll();
+    }
+
+    public List<Food> getByShop(Shop shop) {
+        return foodRepository.findByShop(shop);
     }
 }

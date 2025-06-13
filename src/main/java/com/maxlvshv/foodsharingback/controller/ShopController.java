@@ -86,13 +86,14 @@ public class ShopController {
         User currentUser = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<Shop> shops = shopService.findShopByOwner(currentUser); // Убедитесь, что это List<Shop>
+        List<Shop> shops = shopService.findShopByOwner(currentUser);
+        List<Food> foods = foodService.getByShop(shops.get(0));
 
         // Создаем AdminShopResponse с использованием DTO
         AdminShopResponse response = new AdminShopResponse(new UserDTO(currentUser),
                 shops.stream()
                         .map(ShopDTO::new) // Преобразуем каждый объект Shop в ShopDTO
-                        .collect(Collectors.toList())); // Собираем в список
+                        .collect(Collectors.toList()), foods); // Собираем в список
 
         return ResponseEntity.ok(response);
     }
