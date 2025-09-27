@@ -1,0 +1,871 @@
+openapi: 3.0.1
+info:
+  title: FoodSharing
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /auth/sign-up:
+    post:
+      tags:
+        - auth-controller
+      summary: Регистрация пользователя
+      operationId: signUp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/JwtAuthenticationResponse'
+  /auth/sign-up-admin:
+    post:
+      tags:
+        - auth-controller
+      summary: Регистрация админа
+      operationId: signUpAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/JwtAuthenticationResponse'
+  /auth/sign-in:
+    post:
+      tags:
+        - auth-controller
+      summary: Авторизация пользователя
+      operationId: signIn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/JwtAuthenticationResponse'
+  /shops:
+    get:
+      tags:
+        - shop-controller
+      summary: Показать все магазины
+      operationId: getShops
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MainPageResponse'
+    post:
+      tags:
+        - shop-controller
+      summary: Создать магазин
+      operationId: createShop
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateShopRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ShopResponse'
+  /shops/{shopId}/foods:
+    post:
+      tags:
+        - shop-controller
+      summary: Создать еду в магазине
+      operationId: addFoodToShop
+      parameters:
+        - name: shopId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFoodRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /shops/{shopId}/foods/cart:
+    post:
+      tags:
+        - cart-item-controller
+      operationId: addItem
+      parameters:
+        - name: shopId
+          in: path
+          required: true
+          description: "ID of the shop"
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCartItemRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /orders:
+    get:
+      tags:
+        - order-controller
+      operationId: getCart
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDTO'
+    post:
+      tags:
+        - order-controller
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /orders/{orderId}/received:
+    post:
+      tags:
+        - order-controller
+      operationId: statusRECEIVED
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /orders/{orderId}/ready:
+    post:
+      tags:
+        - order-controller
+      operationId: statusREADY
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /orders/{orderId}/process:
+    post:
+      tags:
+        - order-controller
+      operationId: statusINPROCESS
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /food/toggleActive/{foodId}:
+    post:
+      tags:
+        - food-controller
+      operationId: toggleActive
+      parameters:
+        - name: foodId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Food'
+  /cart/increase/{cartItemId}:
+    post:
+      tags:
+        - cart-item-controller
+      operationId: increaseQuantity
+      parameters:
+        - name: cartItemId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /cart/decrease/{cartItemId}:
+    post:
+      tags:
+        - cart-item-controller
+      operationId: decreaseQuantity
+      parameters:
+        - name: cartItemId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+
+  /test:
+    get:
+      tags:
+        - test-conroller
+      operationId: sayHi
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /test/sec:
+    get:
+      tags:
+        - test-conroller
+      operationId: sayHiSecr
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /shops/{id}:
+    get:
+      tags:
+        - shop-controller
+      operationId: getShop
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Shop'
+    delete:
+      tags:
+        - shop-controller
+      operationId: deleteTeam
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+  /shops/admin:
+    get:
+      tags:
+        - shop-controller
+      operationId: getShopByAdmin
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AdminShopResponse'
+  /orders/{orderId}:
+    get:
+      tags:
+        - order-controller
+      operationId: getOrderById
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrderDTOforDet'
+  /cart:
+    get:
+      tags:
+        - cart-item-controller
+      operationId: getCart_1
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserCartResponse'
+  /:
+    get:
+      tags:
+        - food-controller
+      operationId: getFoods
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Food'
+  /cart/{cartItemId}:
+    delete:
+      tags:
+        - cart-item-controller
+      operationId: removeItem
+      parameters:
+        - name: cartItemId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    CreateShopRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        address:
+          type: string
+        contactPhone:
+          type: string
+      required:
+        - address
+        - name
+    ShopResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        address:
+          type: string
+        ownerId:
+          type: integer
+          format: int64
+    CreateFoodRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum:
+            - BAKERY
+            - DESSERTS
+            - FREEZING
+            - SALADS
+            - BREAD
+            - BOWLS
+            - GARNISH
+            - POKE
+            - OTHER
+        originalPrice:
+          type: number
+          format: double
+        discountPrice:
+          type: number
+          format: double
+        expiresDate:
+          type: integer
+          format: int32
+      required:
+        - category
+        - name
+    CreateCartItemRequest:
+      type: object
+      properties:
+        food:
+          type: integer
+          format: int64
+      required:
+        - food
+    CreateOrderRequest:
+      type: object
+      properties:
+        finalPrice:
+          type: integer
+          format: int32
+        discountPrice:
+          type: integer
+          format: int32
+      required:
+        - discountPrice
+        - finalPrice
+    Food:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum:
+            - BAKERY
+            - DESSERTS
+            - FREEZING
+            - SALADS
+            - BREAD
+            - BOWLS
+            - GARNISH
+            - POKE
+            - OTHER
+        originalPrice:
+          type: number
+          format: double
+        discountPrice:
+          type: number
+          format: double
+        expirationDate:
+          type: string
+          format: date-time
+        shop:
+          $ref: '#/components/schemas/Shop'
+        active:
+          type: boolean
+        expired:
+          type: boolean
+    Shop:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum:
+            - Cafe
+            - Canteen
+            - Bar
+            - Confectionery
+        address:
+          type: string
+        contactPhone:
+          type: string
+        foods:
+          type: array
+          items:
+            $ref: '#/components/schemas/Food'
+    SignUpRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 50
+          minLength: 5
+        email:
+          type: string
+        password:
+          type: string
+          maxLength: 255
+          minLength: 0
+        firstName:
+          type: string
+        lastName:
+          type: string
+        city:
+          type: string
+        number:
+          type: string
+      required:
+        - username
+    JwtAuthenticationResponse:
+      type: object
+      properties:
+        token:
+          type: string
+    SignInRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 50
+          minLength: 5
+        password:
+          type: string
+          maxLength: 255
+          minLength: 0
+      required:
+        - username
+    GrantedAuthority:
+      type: object
+      properties:
+        authority:
+          type: string
+    MainPageResponse:
+      type: object
+      properties:
+        currentUser:
+          $ref: '#/components/schemas/User'
+        shops:
+          type: array
+          items:
+            $ref: '#/components/schemas/Shop'
+        food:
+          type: array
+          items:
+            $ref: '#/components/schemas/Food'
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        user:
+          $ref: '#/components/schemas/User'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        status:
+          type: string
+          enum:
+            - REGISTERED
+            - INPROCESS
+            - READY
+            - RECEIVED
+            - CANCELLED
+        createdAt:
+          type: string
+          format: date-time
+        finalPrice:
+          type: integer
+          format: int32
+        discountPrice:
+          type: integer
+          format: int32
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        order:
+          $ref: '#/components/schemas/Order'
+        food:
+          $ref: '#/components/schemas/Food'
+        quantity:
+          type: integer
+          format: int32
+        priceAtPurchase:
+          type: number
+          format: double
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        city:
+          type: string
+        number:
+          type: string
+        role:
+          type: string
+          enum:
+            - ROLE_USER
+            - ROLE_ADMIN
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        favoriteFoods:
+          type: array
+          items:
+            $ref: '#/components/schemas/Food'
+        enabled:
+          type: boolean
+        authorities:
+          type: array
+          items:
+            $ref: '#/components/schemas/GrantedAuthority'
+        accountNonExpired:
+          type: boolean
+        credentialsNonExpired:
+          type: boolean
+        accountNonLocked:
+          type: boolean
+    AdminShopResponse:
+      type: object
+      properties:
+        currentUser:
+          $ref: '#/components/schemas/UserDTO'
+        shops:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShopDTO'
+        foods:
+          type: array
+          items:
+            $ref: '#/components/schemas/Food'
+    ShopDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum:
+            - Cafe
+            - Canteen
+            - Bar
+            - Confectionery
+        address:
+          type: string
+        contactPhone:
+          type: string
+    UserDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        city:
+          type: string
+        number:
+          type: string
+        role:
+          type: string
+    OrderDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemDTO'
+        status:
+          type: string
+          enum:
+            - REGISTERED
+            - INPROCESS
+            - READY
+            - RECEIVED
+            - CANCELLED
+        createdAt:
+          type: string
+          format: date-time
+        finalPrice:
+          type: integer
+          format: int32
+        discountPrice:
+          type: integer
+          format: int32
+    OrderItemDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        foodId:
+          type: integer
+          format: int64
+        quantity:
+          type: integer
+          format: int32
+        priceAtPurchase:
+          type: number
+          format: double
+    OrderDTOforDet:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemDTO'
+        status:
+          type: string
+          enum:
+            - REGISTERED
+            - INPROCESS
+            - READY
+            - RECEIVED
+            - CANCELLED
+        createdAt:
+          type: string
+          format: date-time
+        finalPrice:
+          type: integer
+          format: int32
+        discountPrice:
+          type: integer
+          format: int32
+    CartItemDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        foodId:
+          type: integer
+          format: int64
+        quantity:
+          type: integer
+          format: int32
+        foodName:
+          type: string
+        originalPrice:
+          type: number
+          format: double
+        discountPrice:
+          type: number
+          format: double
+    UserCartResponse:
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItemDTO'
+
+  
